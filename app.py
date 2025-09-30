@@ -47,6 +47,20 @@ st.markdown("""
     section[data-testid="stHeader"] {display: none !important;}
     div[data-testid="stHeader"] {display: none !important;}
     
+    /* Ocultar ícones do canto superior direito */
+    button[kind="headerNoPadding"] {display: none !important;}
+    button[data-testid="baseButton-header"] {display: none !important;}
+    button[data-testid="baseButton-headerNoPadding"] {display: none !important;}
+    div[data-testid="stActionButtonIcon"] {display: none !important;}
+    .stApp > header {display: none !important;}
+    .stApp header[data-testid="stHeader"] > div {display: none !important;}
+    section[data-testid="stSidebarNav"] {display: none !important;}
+    
+    /* Ocultar qualquer botão no header */
+    header button {display: none !important;}
+    header svg {display: none !important;}
+    .stApp > header > div {display: none !important;}
+    
     [data-testid="column"] {
         padding: 0 4px !important;
     }
