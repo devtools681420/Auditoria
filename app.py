@@ -5,7 +5,8 @@ import re
 st.set_page_config(
     page_title="Certificados de Calibração",
     page_icon="🔍",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # CSS
@@ -16,6 +17,23 @@ st.markdown("""
     * {
         font-family: 'Inter', sans-serif !important;
     }
+    
+    /* Ocultar TODOS os elementos do Streamlit */
+    #MainMenu {visibility: hidden !important;}
+    footer {visibility: hidden !important;}
+    header {visibility: hidden !important;}
+    .stDeployButton {display: none !important;}
+    .viewerBadge_container__1QSob {display: none !important;}
+    .styles_viewerBadge__1yB5_ {display: none !important;}
+    .stApp [data-testid="stToolbar"] {display: none !important;}
+    div[data-testid="stDecoration"] {display: none !important;}
+    div[data-testid="stStatusWidget"] {display: none !important;}
+    button[kind="header"] {display: none !important;}
+    [data-testid="collapsedControl"] {display: none !important;}
+    section[data-testid="stSidebar"] {display: none !important;}
+    .css-1dp5vir {display: none !important;}
+    .css-18e3th9 {padding-top: 0 !important;}
+    .block-container {padding-top: 2rem !important;}
     
     [data-testid="column"] {
         padding: 0 4px !important;
