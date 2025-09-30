@@ -155,6 +155,9 @@ st.markdown("""
         font-size: 24px !important;
         margin-bottom: 16px !important;
     }
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
