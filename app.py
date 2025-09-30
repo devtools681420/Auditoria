@@ -35,6 +35,18 @@ st.markdown("""
     .css-18e3th9 {padding-top: 0 !important;}
     .block-container {padding-top: 2rem !important;}
     
+    /* Ocultar "Created by" e "Hosted" */
+    footer::before {display: none !important;}
+    footer::after {display: none !important;}
+    a[href*="streamlit.io"] {display: none !important;}
+    [data-testid="stToolbarActions"] {display: none !important;}
+    .viewerBadge_link__1S137 {display: none !important;}
+    .viewerBadge_text__1JaDK {display: none !important;}
+    div[class*="viewerBadge"] {display: none !important;}
+    header[data-testid="stHeader"] {display: none !important;}
+    section[data-testid="stHeader"] {display: none !important;}
+    div[data-testid="stHeader"] {display: none !important;}
+    
     [data-testid="column"] {
         padding: 0 4px !important;
     }
