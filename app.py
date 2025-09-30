@@ -35,7 +35,11 @@ st.markdown("""
     .css-18e3th9 {padding-top: 0 !important;}
     .block-container {padding-top: 2rem !important;}
     
-    /* Ocultar "Created by" e "Hosted" */
+    /* Ocultar "Created by" e "Hosted with Streamlit" */
+    footer {display: none !important;}
+    footer * {display: none !important;}
+    .viewerBadge_container__r5tak {display: none !important;}
+    .viewerBadge_link__qRIco {display: none !important;}
     footer::before {display: none !important;}
     footer::after {display: none !important;}
     a[href*="streamlit.io"] {display: none !important;}
@@ -43,9 +47,21 @@ st.markdown("""
     .viewerBadge_link__1S137 {display: none !important;}
     .viewerBadge_text__1JaDK {display: none !important;}
     div[class*="viewerBadge"] {display: none !important;}
+    div[class*="ViewerBadge"] {display: none !important;}
     header[data-testid="stHeader"] {display: none !important;}
     section[data-testid="stHeader"] {display: none !important;}
     div[data-testid="stHeader"] {display: none !important;}
+    
+    /* Forçar esconder footer completamente */
+    footer, footer *, .main footer, .main footer * {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
     
     /* Ocultar ícones do canto superior direito */
     button[kind="headerNoPadding"] {display: none !important;}
