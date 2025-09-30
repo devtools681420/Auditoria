@@ -148,7 +148,7 @@ df = load_data()
 if 'Item' in df.columns:
     df = df.drop(columns=['Item'])
 
-search = st.text_input("", placeholder="🔍 Buscar...", label_visibility="collapsed")
+search = st.text_input("Buscar", placeholder="🔍 Buscar...", label_visibility="collapsed")
 filtered_df = filter_data(df, search)
 
 if not filtered_df.empty:
