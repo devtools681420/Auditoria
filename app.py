@@ -202,6 +202,51 @@ def filter_data(df: pd.DataFrame, search: str) -> pd.DataFrame:
         mask |= normalized_col.str.contains(normalized_search, na=False)
     return df[mask]
 
+# JavaScript para remover elementos do Streamlit
+st.markdown("""
+<script>
+    // Função para remover elementos
+    function removeStreamlitElements() {
+        // Remover footer
+        const footer = window.parent.document.querySelector('footer');
+        if (footer) footer.remove();
+        
+        // Remover todos os elementos com "streamlit" no texto
+        const allElements = window.parent.document.querySelectorAll('*');
+        allElements.forEach(el => {
+            if (el.textContent && (el.textContent.includes('Streamlit') || 
+                el.textContent.includes('Created by') || 
+                el.textContent.includes('Hosted'))) {
+                el.style.display = 'none';
+                el.remove();
+            }
+        });
+        
+        // Remover header
+        const header = window.parent.document.querySelector('header');
+        if (header) header.remove();
+        
+        // Remover toolbar
+        const toolbar = window.parent.document.querySelector('[data-testid="stToolbar"]');
+        if (toolbar) toolbar.remove();
+        
+        // Remover badges
+        const badges = window.parent.document.querySelectorAll('[class*="viewerBadge"]');
+        badges.forEach(badge => badge.remove());
+    }
+    
+    // Executar imediatamente
+    removeStreamlitElements();
+    
+    // Executar periodicamente
+    setInterval(removeStreamlitElements, 100);
+    
+    // Executar quando a página carregar
+    window.addEventListener('load', removeStreamlitElements);
+    document.addEventListener('DOMContentLoaded', removeStreamlitElements);
+</script>
+""", unsafe_allow_html=True)
+
 st.title("PMJA-Gestão de instrumentos")
 
 df = load_data()
