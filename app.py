@@ -180,7 +180,7 @@ def normalize_text(text: str) -> str:
 
 def load_data() -> pd.DataFrame:
     try:
-        df = pd.read_excel("PMJA_Controle Certificados de calibração_V_2.xlsm")
+        df = pd.read_excel("PMJA-INSTRUMENTOS CERTIFICADOS.xlsx")
         for col in df.columns:
             if df[col].dtype == 'datetime64[ns]':
                 df[col] = df[col].dt.strftime('%d/%m/%Y')
@@ -250,7 +250,7 @@ st.markdown("""
 </script>
 """, unsafe_allow_html=True)
 
-st.title("PMJA-Gestão de instrumentos")
+st.title("PMJA - Gestão de Instrumentos Certificados")
 
 df = load_data()
 if 'Item' in df.columns:
@@ -264,10 +264,19 @@ if not filtered_df.empty:
     
     for idx, (_, row) in enumerate(filtered_df.iterrows()):
         with cols[idx % 4]:
-            identifier_col = [col for col in row.index if col.lower() != 'item'][0]
+            # Prioritize meaningful identifier columns
+            preferred_identifier_cols = ['Cód. Material (Nº do Ativo)', 'Descrição do Instrumento', 'Nº de Série', 'Marca', 'Modelo']
+            identifier_col = None
+            for col in preferred_identifier_cols:
+                if col in row.index:
+                    identifier_col = col
+                    break
+            # If none of the preferred columns exist, use the first available column that's not 'item'
+            if identifier_col is None:
+                identifier_col = [col for col in row.index if col.lower() != 'item'][0]
             identifier = row[identifier_col] if not pd.isna(row[identifier_col]) else "Sem ID"
             
-            link = row.get('Link', '')
+            link = row.get('LinkCertificado', '')
             imagem = row.get('ImagemLink', '')
             
             html = '<div class="card">'
@@ -284,11 +293,11 @@ if not filtered_df.empty:
             # Campos
             html += '<div class="card-body">'
             for col in row.index:
-                if col.lower() not in ['item', 'link', 'imagemlink']:
+                if col.lower() not in ['item', 'link', 'imagemlink', 'linkcertificado', 'click', 'imagem']:
                     value = row[col]
                     if pd.notna(value) and str(value).strip():
                         # Link no certificado
-                        if col in ['Nº do Certificado', 'Certificate Number / Calibration Number']:
+                        if col in ['Nº do Certificado', 'Certificate Number / Calibration Number', 'N do Certificado']:
                             if link and pd.notna(link) and str(link).strip() and str(link).strip() != '#':
                                 html += f'<div class="field"><strong>{col}:</strong> <a href="{link}" target="_blank" class="link">{value}</a></div>'
                             else:
