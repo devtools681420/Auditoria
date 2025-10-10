@@ -1,12 +1,35 @@
 import streamlit as st
 import pandas as pd
 import re
+import io
 
 st.set_page_config(
     page_title="Certificados de Calibração",
     page_icon="🔍",
     layout="wide",
     initial_sidebar_state="collapsed"
+)
+
+# Força o tema claro
+st.markdown(
+    """
+    <style>
+    /* Força o tema claro */
+    [data-testid="stAppViewContainer"] {
+        background-color: white !important;
+    }
+    [data-testid="stHeader"] {
+        background-color: white !important;
+    }
+    [data-testid="stToolbar"] {
+        background-color: white !important;
+    }
+    [data-testid="stSidebar"] {
+        background-color: white !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 # CSS
@@ -250,19 +273,56 @@ st.markdown("""
 </script>
 """, unsafe_allow_html=True)
 
-st.title("PMJA - Gestão de Instrumentos Certificados")
-
 df = load_data()
 if 'Item' in df.columns:
     df = df.drop(columns=['Item'])
 
-search = st.text_input("Buscar", placeholder="🔍 Buscar...", label_visibility="collapsed")
+# Display the main title first with initial count
+total_count = len(df)
+st.markdown(f"### PMJA - Gestão de Instrumentos Certificados  <span style='font-size: 0.8em; color: gray;'>({total_count} instrumentos)</span>", unsafe_allow_html=True)
+
+# Create columns for search and export
+col1, col2 = st.columns([4, 1])
+with col1:
+    search = st.text_input("Buscar", placeholder="🔍 Buscar...", label_visibility="collapsed")
+with col2:
+    # Export the currently displayed data (all or filtered)
+    filtered_df = filter_data(df, search)
+    if search:  # If there's a search term
+        display_df = filtered_df
+    else:  # No search term, show all data
+        display_df = df
+    
+    buffer_filtered = io.BytesIO()
+    with pd.ExcelWriter(buffer_filtered, engine='openpyxl') as writer:
+        display_df.to_excel(writer, index=False, sheet_name='Instrumentos')
+    buffer_filtered.seek(0)
+    
+    # The Excel button now exports what's currently displayed
+    st.download_button(
+        label="📥 Excel",
+        data=buffer_filtered,
+        file_name="instrumentos_filtrados.xlsx" if search else "instrumentos.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
 filtered_df = filter_data(df, search)
 
-if not filtered_df.empty:
+# Show count of filtered results in the same line as the search/export
+if search:
+    filtered_count = len(filtered_df)
+    st.markdown(f"<div style='margin-top: -20px; margin-bottom: 10px; font-size: 0.9em; color: gray; text-align: right;'>{filtered_count} de {total_count} instrumentos</div>", unsafe_allow_html=True)
+
+# Show data based on whether there's a search or not
+if search:  # If there's a search term
+    display_df = filtered_df
+else:  # No search term, show all data
+    display_df = df
+
+if not display_df.empty:
     cols = st.columns(4, gap="small")
     
-    for idx, (_, row) in enumerate(filtered_df.iterrows()):
+    for idx, (_, row) in enumerate(display_df.iterrows()):
         with cols[idx % 4]:
             # Prioritize meaningful identifier columns
             preferred_identifier_cols = ['Cód. Material (Nº do Ativo)', 'Descrição do Instrumento', 'Nº de Série', 'Marca', 'Modelo']
@@ -293,7 +353,7 @@ if not filtered_df.empty:
             # Campos
             html += '<div class="card-body">'
             for col in row.index:
-                if col.lower() not in ['item', 'link', 'imagemlink', 'linkcertificado', 'click', 'imagem']:
+                if col.lower() not in ['item', 'link', 'imagemlink', 'linkcertificado', 'click', 'imagem'] and col not in ['Cód. Material (Nº do Ativo)', 'Incerteza Estimada (U)', 'Status', 'Base da Incerteza (Cálculo do Instrumento)','Erros (Desvios)']:
                     value = row[col]
                     if pd.notna(value) and str(value).strip():
                         # Link no certificado
